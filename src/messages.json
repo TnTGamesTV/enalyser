@@ -1,0 +1,38 @@
+{
+    "version": "1.0.0",
+    "fileBrowser": {
+        "selected": "Ausgewählt",
+        "abort": {
+            "longText": "Dateiauswahl abbrechen",
+            "shortText": "[❌] Abbrechen"
+        },
+        "title": "Wählen Sie Dateien für die Analyse aus:",
+        "addFile": {
+            "longText": "Datei zur Analyse hinzufügen"
+        },
+        "startAnalysis": {
+            "longText": "Analyse mit {count} Datei/en starten",
+            "shortText": "[✅] Analyse starten",
+            "disabledText": "[🚨] Keine Analyse möglich, da keine Datei/en ausgewählt ist/sind"
+        },
+        "enterFolder": {
+            "longText": "Diesen Ordner betreten"
+        },
+        "goToParentFolder": {
+            "longText": "Zum übergeordneten Ordner wechseln",
+            "shortText": "[🔙] Zum höheren Ordner"
+        }
+    },
+    "shouldWriteToDisk": {
+        "question": "Möchten Sie die Analyseergebnisse auf der Festplatte speichern?",
+        "yes": "Ja, Ergebnisse speichern",
+        "no": "Nein, Ergebnisse nicht speichern"
+    },
+    "analysisPreview": {
+        "title": "Analysevorschau",
+        "question": "Möchten Sie die Analyse mit den folgenden Dateien starten?",
+        "yes": "Ja, Analyse mit {count} Datei/en starten",
+        "no": "Nein, Analyse abbrechen (Dateiauswahl geht verloren)",
+        "description": "Folgende Dateien wurden für die Analyse ausgewählt:"
+    }
+}
