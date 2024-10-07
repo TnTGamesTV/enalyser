@@ -21,11 +21,11 @@ export const analysis = (files: string[]) => {
     }, new Map<string, number>());
 
     const monthlyGeneration = generation.reduce((acc, g) => {
-        for (const [day, generation] of g.dailyGeneration) {
-            if (acc.has(day)) {
-                acc.set(day, acc.get(day)! + generation);
+        for (const [month, generation] of g.monthlyGeneration) {
+            if (acc.has(month)) {
+                acc.set(month, acc.get(month)! + generation);
             } else {
-                acc.set(day, generation);
+                acc.set(month, generation);
             }
         }
         return acc;
@@ -55,48 +55,44 @@ function calculateDailyAndMonthlyGeneration(
     const dailyGeneration = new Map<string, number>();
     const monthlyGeneration = new Map<string, number>();
 
-    for (let i = 1; i < items.length; i++) {
+    for (let i = 0; i < items.length; i++) {
         const item = items[i];
-        const previousItem = items[i - 1];
 
-        const currentDate = item.time;
-        const previousDate = previousItem.time;
+        //apprently the csv files contain directly kWh per entry even if this should be 1/4th of an hour
+        //only god knows why they did that as it wasn't mentioned anywhere
+        const energyProducedKwh = item.wattage;
 
-        // Berechne die Zeitdifferenz in Sekunden
-        const timeDifferenceInSeconds =
-            (currentDate.getTime() - previousDate.getTime()) / 1000;
+        const dayKey = getDayKey(item.time);
+        const monthKey = getMonthKey(item.time);
 
-        // Berechne die Erzeugung in kWh (Watt * Zeit in Sekunden, dann Umrechnung in kWh)
-        const energyProduced =
-            (previousItem.wattage * timeDifferenceInSeconds) / (1000 * 3600); // Watt zu kWh
-
-        const dayKey = `${previousDate.getFullYear()}-${
-            ("0" + (previousDate.getMonth() + 1)).slice(-2)
-        }-${("0" + (previousDate.getDate() + 1)).slice(-2)}`;
-        const monthKey = `${previousDate.getFullYear()}-${
-            ("0" + (previousDate.getMonth() + 1)).slice(-2)
-        }`;
-
-        // Tageserzeugung aktualisieren
         if (dailyGeneration.has(dayKey)) {
             dailyGeneration.set(
                 dayKey,
-                dailyGeneration.get(dayKey)! + energyProduced,
+                dailyGeneration.get(dayKey)! + energyProducedKwh,
             );
         } else {
-            dailyGeneration.set(dayKey, energyProduced);
+            dailyGeneration.set(dayKey, energyProducedKwh);
         }
 
-        // Monatserzeugung aktualisieren
         if (monthlyGeneration.has(monthKey)) {
             monthlyGeneration.set(
                 monthKey,
-                monthlyGeneration.get(monthKey)! + energyProduced,
+                monthlyGeneration.get(monthKey)! + energyProducedKwh,
             );
         } else {
-            monthlyGeneration.set(monthKey, energyProduced);
+            monthlyGeneration.set(monthKey, energyProducedKwh);
         }
     }
 
     return { dailyGeneration, monthlyGeneration };
 }
+
+const getDayKey = (date: Date) => {
+    return `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${
+        ("0" + (date.getDate())).slice(-2)
+    }`;
+};
+
+const getMonthKey = (date: Date) => {
+    return `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}`;
+};
